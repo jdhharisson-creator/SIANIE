@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Сияние & Искра | DS/K</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000000;
+            min-height: 100vh;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ========== ОБЩИЕ ЧАСТИЦЫ ДЛЯ ВСЕХ СТРАНИЦ ========== */
+        .global-particles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .g-particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0;
+            animation: gFloat 7s infinite ease-in;
+        }
+
+        @keyframes gFloat {
+            0% { opacity: 0; transform: translateY(0) scale(0.4); }
+            25% { opacity: 0.7; }
+            100% { opacity: 0; transform: translateY(-220px) translateX(30px) scale(1.6); }
+        }
+
+        /* ========== СТРАНИЦЫ-СЛАЙДЫ ========== */
+        .slides-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            opacity: 0;
+            transform: scale(0.96);
+            pointer-events: none;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: all;
+            z-index: 2;
+        }
+
+        /* ========== СТРАНИЦА 1: СИЯНИЕ ========== */
+        #slide-siyanie {
+            background: radial-gradient(circle at center, #001a33 0%, #000000 90%);
+        }
+
+        /* ========== СТРАНИЦА 2: ИСКРА ========== */
+        #slide-iskra {
+            background: radial-gradient(ellipse at center, #1a0e00 0%, #0a0400 50%, #000000 100%);
+        }
+
+        /* ========== СТРАНИЦА 3: ЕДИНСТВО ========== */
+        #slide-unity {
+            background: radial-gradient(ellipse at 25% 50%, #001a33 0%, #000000 50%, #1a0e00 100%);
+        }
+
+        .slide-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 35px;
+            padding: 40px 20px;
+        }
+
+        /* ========== ЗВЁЗДЫ (Сияние) ========== */
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: #00aaff;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: twinkle 3s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.1; transform: scale(1); }
+            100% { opacity: 0.8; transform: scale(1.3); }
+        }
+
+        /* ========== ЭМБЕРЫ (Искра) ========== */
+        .embers {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .ember {
+            position: absolute;
+            background: #ff9930;
+            border-radius: 50%;
+            opacity: 0;
+            animation: emberRise 6s infinite ease-in;
+            box-shadow: 0 0 4px #ff8820, 0 0 10px #ff6610;
+        }
+
+        @keyframes emberRise {
+            0% { opacity: 0; transform: translateY(0) scale(0.5); }
+            15% { opacity: 0.7; }
+            100% { opacity: 0; transform: translateY(-280px) translateX(20px) scale(1.4); }
+        }
+
+        /* ========== ЛОГО СИЯНИЕ (ТРЕУГОЛЬНИКИ) ========== */
+        .logo {
+            position: relative;
+            width: 200px;
+            height: 180px;
+        }
+
+        .triangle {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 45px solid transparent;
+            border-right: 45px solid transparent;
+            border-top: 90px solid transparent;
+            filter: drop-shadow(0 0 6px #00d4ff) drop-shadow(0 0 12px #00aaff);
+            transition: all 0.2s ease;
+        }
+
+        .triangle-left {
+            left: 8px;
+            top: 45px;
+            transform: scale(0.85);
+            border-top-color: #00e5ff;
+        }
+
+        .triangle-center {
+            left: 55px;
+            top: 0;
+            border-top-color: #3effff;
+            filter: drop-shadow(0 0 10px #0ef) drop-shadow(0 0 4px white);
+        }
+
+        .triangle-right {
+            left: 102px;
+            top: 45px;
+            transform: scale(0.85);
+            border-top-color: #00e5ff;
+        }
+
+        .divider {
+            position: absolute;
+            width: 2px;
+            height: 100px;
+            background: linear-gradient(to bottom, #00ffff, #0066aa, #00ffff);
+            border-radius: 2px;
+            filter: blur(1px);
+            opacity: 0.8;
+            top: 40px;
+            pointer-events: none;
+            animation: dividerPulse 2s infinite alternate;
+        }
+
+        .divider-left { left: 48px; }
+        .divider-right { left: 150px; }
+
+        @keyframes dividerPulse {
+            0% { opacity: 0.4; height: 90px; }
+            100% { opacity: 1; height: 110px; }
+        }
+
+        .pulse-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200px;
+            height: 200px;
+            margin-left: -100px;
+            margin-top: -90px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 255, 255, 0.4);
+            animation: ringPulse 2.5s infinite ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes ringPulse {
+            0% { transform: scale(0.9); opacity: 0.6; border-width: 1px; }
+            100% { transform: scale(1.3); opacity: 0; border-width: 3px; border-color: #00ffff; }
+        }
+
+        /* ========== ТЕКСТ СИЯНИЕ ========== */
+        .title-siyanie {
+            font-size: 68px;
+            font-weight: 800;
+            letter-spacing: 16px;
+            background: linear-gradient(135deg, #aaffff, #2ad4ff, #0088cc);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px #00d4ff, 0 0 20px #0088ff;
+            animation: textGlow 1.8s infinite alternate;
+        }
+
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 5px #00ccff99; letter-spacing: 16px; }
+            100% { text-shadow: 0 0 25px #00ffff, 0 0 40px #0099ff; letter-spacing: 18px; }
+        }
+
+        /* ========== ИСКРА (4-КОНЕЧНАЯ) ========== */
+        .spark-wrapper {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .halo {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 170, 50, 0.4);
+            animation: haloBreathe 4s infinite ease-in-out;
+            pointer-events: none;
+        }
+
+        .halo-1 { width: 200px; height: 200px; }
+        .halo-2 { width: 260px; height: 260px; border-color: rgba(255, 130, 20, 0.25); animation-delay: 0.8s; }
+        .halo-3 { width: 320px; height: 320px; border-color: rgba(255, 190, 70, 0.15); animation-delay: 1.6s; }
+
+        @keyframes haloBreathe {
+            0% { transform: scale(0.85); opacity: 0.5; }
+            50% { transform: scale(1.15); opacity: 0.15; }
+            100% { transform: scale(0.85); opacity: 0.5; }
+        }
+
+        .spark {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            z-index: 2;
+            animation: sparkBreathe 3s infinite ease-in-out;
+        }
+
+        @keyframes sparkBreathe {
+            0% { filter: drop-shadow(0 0 12px #ffaa00) drop-shadow(0 0 24px #ff7700) drop-shadow(0 0 40px #ff4400); transform: scale(1); }
+            50% { filter: drop-shadow(0 0 20px #ffcc00) drop-shadow(0 0 40px #ff9900) drop-shadow(0 0 60px #ff5500); transform: scale(1.04); }
+            100% { filter: drop-shadow(0 0 12px #ffaa00) drop-shadow(0 0 24px #ff7700) drop-shadow(0 0 40px #ff4400); transform: scale(1); }
+        }
+
+        .spark-ray-h {
+            position: absolute;
+            width: 120px;
+            height: 5px;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            background: linear-gradient(to right, transparent, #ffddaa, #ffcc44, #ff9900, #ffcc44, #ffddaa, transparent);
+            border-radius: 3px;
+            box-shadow: 0 0 6px #ffaa00, 0 0 16px #ff7700, 0 0 28px #ff4400;
+            animation: rayGlow 3s infinite ease-in-out;
+        }
+
+        .spark-ray-v {
+            position: absolute;
+            width: 5px;
+            height: 120px;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+            background: linear-gradient(to bottom, transparent, #ffddaa, #ffcc44, #ff9900, #ffcc44, #ffddaa, transparent);
+            border-radius: 3px;
+            box-shadow: 0 0 6px #ffaa00, 0 0 16px #ff7700, 0 0 28px #ff4400;
+            animation: rayGlow 3s infinite ease-in-out;
+        }
+
+        @keyframes rayGlow {
+            0% { box-shadow: 0 0 6px #ffaa00, 0 0 16px #ff7700, 0 0 28px #ff4400; }
+            50% { box-shadow: 0 0 12px #ffcc00, 0 0 28px #ff9900, 0 0 44px #ff5500; }
+            100% { box-shadow: 0 0 6px #ffaa00, 0 0 16px #ff7700, 0 0 28px #ff4400; }
+        }
+
+        .spark-diagonal {
+            position: absolute;
+            width: 46px;
+            height: 2px;
+            top: 50%;
+            left: 50%;
+            background: linear-gradient(to right, transparent, #ffcc66, #ff9900, transparent);
+            border-radius: 1px;
+            box-shadow: 0 0 4px #ff8800;
+            opacity: 0.55;
+            animation: diagGlow 3s infinite ease-in-out;
+        }
+
+        .spark-diagonal-1 { transform: translate(-50%, -50%) rotate(45deg); }
+        .spark-diagonal-2 { transform: translate(-50%, -50%) rotate(-45deg); animation-delay: 0.5s; }
+
+        @keyframes diagGlow {
+            0% { opacity: 0.35; box-shadow: 0 0 3px #ff8800; }
+            50% { opacity: 0.75; box-shadow: 0 0 8px #ffaa00; }
+            100% { opacity: 0.35; box-shadow: 0 0 3px #ff8800; }
+        }
+
+        .spark-core {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, #ffffff, #ffeebb, #ff9900);
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ffffff, 0 0 22px #ffcc00, 0 0 38px #ff8800, 0 0 55px #ff5500;
+            animation: coreGlow 3s infinite ease-in-out;
+        }
+
+        @keyframes coreGlow {
+            0% { box-shadow: 0 0 8px #ffffff, 0 0 18px #ffcc00, 0 0 32px #ff8800, 0 0 48px #ff5500; }
+            50% { box-shadow: 0 0 16px #ffffff, 0 0 32px #ffee00, 0 0 50px #ffaa00, 0 0 70px #ff6600; }
+            100% { box-shadow: 0 0 8px #ffffff, 0 0 18px #ffcc00, 0 0 32px #ff8800, 0 0 48px #ff5500; }
+        }
+
+        .title-iskra {
+            font-size: 64px;
+            font-weight: 800;
+            letter-spacing: 18px;
+            background: linear-gradient(180deg, #ffeebb, #ffcc55, #ff8800, #cc5500);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 0 12px #ffaa00) drop-shadow(0 0 28px #ff7700) drop-shadow(0 0 50px #ff4400);
+            animation: titleBreathe 3s infinite ease-in-out;
+        }
+
+        @keyframes titleBreathe {
+            0% { filter: drop-shadow(0 0 10px #ff9900) drop-shadow(0 0 22px #ff6600) drop-shadow(0 0 38px #ff3300); }
+            50% { filter: drop-shadow(0 0 18px #ffcc00) drop-shadow(0 0 36px #ff8800) drop-shadow(0 0 58px #ff4400); }
+            100% { filter: drop-shadow(0 0 10px #ff9900) drop-shadow(0 0 22px #ff6600) drop-shadow(0 0 38px #ff3300); }
+        }
+
+        .subtitle-iskra {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 6px;
+            color: #cc8844;
+            text-shadow: 0 0 8px #ff8800;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        /* ========== СИМВОЛЫ ДЛЯ ЕДИНСТВА ========== */
+        .symbols-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            position: relative;
+        }
+
+        .bridge-line {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(to right, #00d4ff, #ffaa00);
+            border-radius: 2px;
+            opacity: 0.6;
+            animation: bridgeGlow 3s infinite ease-in-out;
+            z-index: 0;
+        }
+
+        @keyframes bridgeGlow {
+            0%, 100% { opacity: 0.3; width: 50px; }
+            50% { opacity: 0.9; width: 70px; }
+        }
+
+        .siyanie-wrapper {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+
+        .siyanie-halo {
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 220, 255, 0.4);
+            animation: haloBlue 3s infinite ease-in-out;
+            pointer-events: none;
+        }
+
+        @keyframes haloBlue {
+            0%, 100% { transform: scale(0.9); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 0.15; }
+        }
+
+        .tri-siya {
+            position: relative;
+            width: 90px;
+            height: 80px;
+            z-index: 2;
+            animation: siyaGlow 3s infinite ease-in-out;
+        }
+
+        @keyframes siyaGlow {
+            0%, 100% { filter: drop-shadow(0 0 5px #00d4ff) drop-shadow(0 0 10px #00aaff); }
+            50% { filter: drop-shadow(0 0 14px #00ffff) drop-shadow(0 0 24px #0099ff); }
+        }
+
+        .tri {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 22px solid transparent;
+            border-right: 22px solid transparent;
+            border-top: 44px solid #00e5ff;
+        }
+
+        .tri-left { left: 4px; top: 22px; transform: scale(0.85); }
+        .tri-center { left: 23px; top: 0; border-top-color: #3effff; }
+        .tri-right { left: 42px; top: 22px; transform: scale(0.85); }
+
+        .iskra-wrapper {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+
+        .iskra-halo {
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 170, 50, 0.4);
+            animation: haloGold 3s infinite ease-in-out;
+            animation-delay: 0.5s;
+            pointer-events: none;
+        }
+
+        @keyframes haloGold {
+            0%, 100% { transform: scale(0.9); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 0.15; }
+        }
+
+        .spark-mini {
+            position: relative;
+            width: 70px;
+            height: 70px;
+            z-index: 2;
+            animation: sparkGlow 3s infinite ease-in-out;
+        }
+
+        @keyframes sparkGlow {
+            0%, 100% { filter: drop-shadow(0 0 6px #ffaa00) drop-shadow(0 0 14px #ff7700); }
+            50% { filter: drop-shadow(0 0 14px #ffcc00) drop-shadow(0 0 28px #ff9900); }
+        }
+
+        .spark-ray-h-mini {
+            position: absolute;
+            width: 70px;
+            height: 3px;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            background: linear-gradient(to right, transparent, #ffeebb, #ffcc44, #ff9900, #ffcc44, #ffeebb, transparent);
+            border-radius: 2px;
+            box-shadow: 0 0 4px #ffaa00, 0 0 10px #ff7700;
+        }
+
+        .spark-ray-v-mini {
+            position: absolute;
+            width: 3px;
+            height: 70px;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+            background: linear-gradient(to bottom, transparent, #ffeebb, #ffcc44, #ff9900, #ffcc44, #ffeebb, transparent);
+            border-radius: 2px;
+            box-shadow: 0 0 4px #ffaa00, 0 0 10px #ff7700;
+        }
+
+        .spark-core-mini {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, #ffffff, #ffdd66, #ff9900);
+            border-radius: 50%;
+            box-shadow: 0 0 6px #ffffff, 0 0 14px #ffcc00, 0 0 24px #ff8800;
+        }
+
+        .symbol-label {
+            text-align: center;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            margin-top: 8px;
+        }
+
+        .label-siya { color: #66ddff; text-shadow: 0 0 6px #00ccff; }
+        .label-iskra { color: #dda855; text-shadow: 0 0 6px #ff8800; }
+
+        /* ========== ВКЛАДКИ (Сияние) ========== */
+        .tabs-wrapper {
+            margin-top: 15px;
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 6px;
+            background: rgba(0, 20, 50, 0.7);
+            backdrop-filter: blur(12px);
+            padding: 6px;
+            border-radius: 50px;
+            border: 1px solid rgba(0, 200, 255, 0.5);
+            box-shadow: 0 0 20px rgba(0, 180, 255, 0.3), inset 0 0 15px rgba(0, 100, 200, 0.2);
+        }
+
+        .tab-btn {
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 2px;
+            background: transparent;
+            color: #88ccff;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.35s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0, 200, 255, 0.2), rgba(0, 100, 200, 0.1));
+            opacity: 0;
+            transition: opacity 0.35s;
+            border-radius: 40px;
+        }
+
+        .tab-btn:hover::before { opacity: 1; }
+        .tab-btn:hover {
+            color: #ffffff;
+            text-shadow: 0 0 12px cyan;
+            border-color: rgba(0, 230, 255, 0.6);
+            box-shadow: 0 0 15px rgba(0, 200, 255, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #006688, #003355);
+            color: #ffffff;
+            border-color: #00e0ff;
+            box-shadow: 0 0 20px rgba(0, 220, 255, 0.6), 0 0 40px rgba(0, 150, 255, 0.3), inset 0 0 10px rgba(0, 255, 255, 0.2);
+            text-shadow: 0 0 15px white;
+            letter-spacing: 3px;
+        }
+
+        .tab-content {
+            display: none;
+            margin-top: 20px;
+            animation: fadeSlideIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .contact-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding: 20px 30px;
+            background: linear-gradient(145deg, rgba(0, 30, 70, 0.8), rgba(0, 10, 30, 0.9));
+            border: 1px solid rgba(0, 200, 255, 0.6);
+            border-radius: 30px;
+            box-shadow: 0 0 30px rgba(0, 160, 255, 0.25), 0 10px 25px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 120, 200, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(0, 200, 255, 0.1), transparent, rgba(0, 150, 255, 0.15), transparent);
+            animation: contactSpin 8s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes contactSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .contact-card > * { position: relative; z-index: 1; }
+
+        .contact-initials {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #ffffff;
+            background: linear-gradient(135deg, #005577, #002244);
+            padding: 8px 24px;
+            border-radius: 40px;
+            letter-spacing: 3px;
+            border: 1px solid #0cf;
+            text-shadow: 0 0 10px #0cf;
+            box-shadow: 0 0 18px rgba(0, 200, 255, 0.5), inset 0 0 8px rgba(0, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contact-email {
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 15px;
+            color: #44ddff;
+            background: rgba(0, 20, 50, 0.6);
+            backdrop-filter: blur(8px);
+            padding: 12px 28px;
+            border-radius: 60px;
+            border: 1px solid rgba(0, 200, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 0 12px rgba(0, 180, 255, 0.2);
+        }
+
+        .contact-email:hover {
+            background: rgba(0, 100, 160, 0.8);
+            border-color: cyan;
+            box-shadow: 0 0 25px cyan, 0 0 45px rgba(0, 150, 255, 0.4);
+            transform: scale(1.05);
+            color: #ffffff;
+        }
+
+        .placeholder-socials {
+            margin-top: 8px;
+            display: flex;
+            gap: 15px;
+            opacity: 0.5;
+        }
+
+        .placeholder-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px dashed rgba(0, 200, 255, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(0, 200, 255, 0.5);
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .placeholder-icon:hover {
+            border-color: cyan;
+            color: cyan;
+            box-shadow: 0 0 12px cyan;
+        }
+
+        /* ========== МАНИФЕСТ ========== */
+        .manifesto {
+            text-align: center;
+            max-width: 550px;
+            padding: 20px 28px;
+            background: rgba(0, 20, 40, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 200, 255, 0.4);
+            border-radius: 28px;
+            animation: manifestoGlow 3s infinite alternate;
+        }
+
+        @keyframes manifestoGlow {
+            0% { border-color: rgba(0, 150, 255, 0.3); box-shadow: 0 0 5px rgba(0, 200, 255, 0.2); }
+            100% { border-color: rgba(0, 230, 255, 0.9); box-shadow: 0 0 25px rgba(0, 200, 255, 0.5); }
+        }
+
+        .manifesto-quote {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ccf4ff, #88ddff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .manifesto-text {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #b8f2ff;
+            letter-spacing: 1px;
+            line-height: 1.4;
+        }
+
+        .ds-label {
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            font-weight: 800;
+            font-size: 0.9rem;
+            background: linear-gradient(135deg, #ffffff, #88ddff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            padding: 6px 20px;
+            border-radius: 40px;
+            border: 1px solid #88ddff;
+            letter-spacing: 2px;
+            backdrop-filter: blur(4px);
+        }
+
+        /* ========== КАРТОЧКИ ========== */
+        .card {
+            margin-top: 10px;
+            text-align: center;
+            max-width: 500px;
+            padding: 28px 32px;
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+        }
+
+        .card-iskra {
+            background: linear-gradient(160deg, rgba(35, 16, 0, 0.75), rgba(18, 7, 0, 0.85));
+            border: 1px solid rgba(255, 150, 40, 0.4);
+            box-shadow: 0 0 30px rgba(255, 110, 15, 0.2), 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: cardBreathe 3s infinite ease-in-out;
+        }
+
+        @keyframes cardBreathe {
+            0% { border-color: rgba(255, 140, 30, 0.4); box-shadow: 0 0 20px rgba(255, 100, 10, 0.15), 0 10px 30px rgba(0, 0, 0, 0.5); }
+            50% { border-color: rgba(255, 190, 50, 0.65); box-shadow: 0 0 38px rgba(255, 140, 25, 0.35), 0 10px 30px rgba(0, 0, 0, 0.5); }
+            100% { border-color: rgba(255, 140, 30, 0.4); box-shadow: 0 0 20px rgba(255, 100, 10, 0.15), 0 10px 30px rgba(0, 0, 0, 0.5); }
+        }
+
+        .card-unity {
+            background: linear-gradient(160deg, rgba(0, 25, 50, 0.5), rgba(30, 15, 0, 0.5));
+            border: 1px solid rgba(150, 200, 200, 0.35);
+            box-shadow: 0 0 30px rgba(100, 180, 200, 0.15), 0 0 30px rgba(200, 130, 30, 0.15);
+            animation: cardUnity 3s infinite ease-in-out;
+        }
+
+        @keyframes cardUnity {
+            0%, 100% { border-color: rgba(130, 200, 220, 0.3); box-shadow: 0 0 20px rgba(80, 160, 200, 0.1), 0 0 20px rgba(200, 120, 20, 0.1); }
+            50% { border-color: rgba(180, 220, 200, 0.6); box-shadow: 0 0 40px rgba(100, 200, 220, 0.25), 0 0 40px rgba(220, 150, 40, 0.25); }
+        }
+
+        .card-quote {
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .card-quote-iskra {
+            background: linear-gradient(135deg, #ffdd99, #ee9933);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 6px;
+        }
+
+        .card-text {
+            font-size: 1.05rem;
+            letter-spacing: 2px;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .card-text-iskra { color: #dda855; }
+        .card-text-unity { color: #99bbaa; }
+
+        .card-author {
+            margin-top: 16px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .author-siya {
+            color: #3377aa;
+            text-shadow: 0 0 8px #2266aa, 0 0 16px #1155aa;
+        }
+
+        .author-dot { color: #667777; font-size: 0.7rem; }
+
+        .author-iskra {
+            background: linear-gradient(180deg, #ffeebb, #ffcc55, #ff9900);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 8px #ffaa00;
+        }
+
+        /* ========== ЕДИНСТВО ТЕКСТ ========== */
+        .unity-title {
+            font-size: 38px;
+            font-weight: 800;
+            letter-spacing: 8px;
+            text-align: center;
+            max-width: 700px;
+            line-height: 1.3;
+            background: linear-gradient(to right, #88ddff 0%, #ccddff 25%, #ffeebb 50%, #ffcc55 75%, #ff9900 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 0 8px rgba(0, 200, 255, 0.5)) drop-shadow(0 0 8px rgba(255, 150, 20, 0.5));
+            animation: unityBreathe 3s infinite ease-in-out;
+        }
+
+        @keyframes unityBreathe {
+            0%, 100% { filter: drop-shadow(0 0 6px rgba(0, 180, 255, 0.4)) drop-shadow(0 0 6px rgba(255, 130, 10, 0.4)); letter-spacing: 7px; }
+            50% { filter: drop-shadow(0 0 18px rgba(0, 220, 255, 0.7)) drop-shadow(0 0 18px rgba(255, 170, 30, 0.7)); letter-spacing: 10px; }
+        }
+
+        .unity-subtitle {
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 5px;
+            text-align: center;
+            margin-top: 8px;
+            background: linear-gradient(to right, #5599bb, #aa9966);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        /* ========== НАВИГАЦИЯ ========== */
+        .nav-dots {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        .nav-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid rgba(200, 200, 200, 0.5);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .nav-dot::after {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .nav-dot:hover {
+            border-color: #ffffff;
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+            transform: scale(1.2);
+        }
+
+        .nav-dot.active {
+            border-color: #ffffff;
+            box-shadow: 0 0 16px rgba(200, 200, 200, 0.8);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Подсказка при наведении */
+        .nav-dot-title {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            white-space: nowrap;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #ffffff;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+        }
+
+        .nav-dot:hover .nav-dot-title { opacity: 1; }
+
+        /* ========== АДАПТИВ ========== */
+        @media (max-width: 600px) {
+            .title-siyanie { font-size: 38px; letter-spacing: 8px; }
+            .title-iskra { font-size: 34px; letter-spacing: 10px; }
+            .unity-title { font-size: 22px; letter-spacing: 4px; }
+            .subtitle-iskra { font-size: 12px; letter-spacing: 4px; }
+            .unity-subtitle { font-size: 11px; letter-spacing: 2px; }
+            .logo { transform: scale(0.7); }
+            .spark-wrapper { transform: scale(0.65); }
+            .symbols-row { gap: 5px; transform: scale(0.7); }
+            .card { max-width: 280px; padding: 16px 20px; }
+            .card-quote { font-size: 0.9rem; }
+            .card-text { font-size: 0.8rem; }
+            .card-author { font-size: 0.7rem; }
+            .tab-btn { font-size: 11px; padding: 8px 18px; }
+            .contact-initials { font-size: 0.9rem; }
+            .contact-email { font-size: 12px; padding: 8px 16px; }
+            .nav-dots { right: 12px; gap: 14px; }
+            .nav-dot { width: 10px; height: 10px; }
+        }
+
+        @media (max-width: 380px) {
+            .unity-title { font-size: 16px; letter-spacing: 3px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Глобальные частицы -->
+<div class="global-particles" id="globalParticles"></div>
+
+<!-- Слайды -->
+<div class="slides-container">
+
+    <!-- ============ СТРАНИЦА 1: СИЯНИЕ ============ -->
+    <div class="slide active" id="slide-siyanie">
+        <div class="stars" id="stars"></div>
+        <div class="slide-content">
+            <div class="logo">
+                <div class="pulse-ring"></div>
+                <div class="divider divider-left"></div>
+                <div class="divider divider-right"></div>
+                <div class="triangle triangle-left"></div>
+                <div class="triangle triangle-center"></div>
+                <div class="triangle triangle-right"></div>
+            </div>
+            <div class="title-siyanie">СИЯНИЕ</div>
+
+            <div class="tabs-wrapper">
+                <div class="tabs-nav">
+                    <button class="tab-btn active" data-tab="tab-contact">✦ КОНТАКТЫ ✦</button>
+                    <button class="tab-btn" data-tab="tab-manifest">❖ МАНИФЕСТ ❖</button>
+                </div>
+                <div class="tab-content active" id="tab-contact">
+                    <div class="contact-card">
+                        <div class="contact-initials">✧ Ч.Кирилл ✧</div>
+                        <div class="contact-email" id="emailBox">📧 Jdhharisson@gmail.com</div>
+                        <div style="font-size: 11px; color: #337799; margin-top: 4px; letter-spacing: 2px;">СКОРО: СОЦСЕТИ</div>
+                        <div class="placeholder-socials">
+                            <div class="placeholder-icon" title="Telegram (скоро)">✈</div>
+                            <div class="placeholder-icon" title="Discord (скоро)">♫</div>
+                            <div class="placeholder-icon" title="GitHub (скоро)">⌂</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content" id="tab-manifest">
+                    <div class="manifesto">
+                        <div class="manifesto-quote">«Мы новый мир воздвигаем,</div>
+                        <div class="manifesto-text">на месте того что был создан не нами»</div>
+                        <div style="display: flex; justify-content: center; margin-top: 25px;">
+                            <span class="ds-label">DS/K</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ СТРАНИЦА 2: ИСКРА ============ -->
+    <div class="slide" id="slide-iskra">
+        <div class="embers" id="embersContainer"></div>
+        <div class="slide-content">
+            <div class="spark-wrapper">
+                <div class="halo halo-1"></div>
+                <div class="halo halo-2"></div>
+                <div class="halo halo-3"></div>
+                <div class="spark">
+                    <div class="spark-ray-h"></div>
+                    <div class="spark-ray-v"></div>
+                    <div class="spark-diagonal spark-diagonal-1"></div>
+                    <div class="spark-diagonal spark-diagonal-2"></div>
+                    <div class="spark-core"></div>
+                </div>
+            </div>
+            <div>
+                <div class="title-iskra">ИСКРА</div>
+                <div class="subtitle-iskra">✦ искра мала, да пламя велико ✦</div>
+            </div>
+            <div class="card card-iskra">
+                <div class="card-quote card-quote-iskra">«Из трения рождается пламя»</div>
+                <div class="card-text card-text-iskra">не всякая искра гаснет в ночи</div>
+                <div class="card-author">
+                    <span class="author-siya">Ч.Кирилл</span>
+                    <span class="author-dot">✦</span>
+                    <span class="author-iskra">DS/K</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ СТРАНИЦА 3: ЕДИНСТВО ============ -->
+    <div class="slide" id="slide-unity">
+        <div class="slide-content">
+            <div class="symbols-row">
+                <div class="bridge-line"></div>
+                <div class="siyanie-wrapper">
+                    <div class="siyanie-halo"></div>
+                    <div class="tri-siya">
+                        <div class="tri tri-left"></div>
+                        <div class="tri tri-center"></div>
+                        <div class="tri tri-right"></div>
+                    </div>
+                    <div class="symbol-label label-siya">СИЯНИЕ</div>
+                </div>
+                <div class="iskra-wrapper">
+                    <div class="iskra-halo"></div>
+                    <div class="spark-mini">
+                        <div class="spark-ray-h-mini"></div>
+                        <div class="spark-ray-v-mini"></div>
+                        <div class="spark-core-mini"></div>
+                    </div>
+                    <div class="symbol-label label-iskra">ИСКРА</div>
+                </div>
+            </div>
+            <div>
+                <div class="unity-title">Вместе, даже если мы разные, мы едины</div>
+                <div class="unity-subtitle">✦ сияние &amp; искра ✦</div>
+            </div>
+            <div class="card card-unity">
+                <div class="card-text card-text-unity">«Два света — одна суть»</div>
+                <div class="card-author">
+                    <span class="author-siya">Ч.Кирилл</span>
+                    <span class="author-dot">✦</span>
+                    <span class="author-iskra">DS/K</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Навигационные точки -->
+<div class="nav-dots">
+    <div class="nav-dot active" data-slide="0">
+        <span class="nav-dot-title">Сияние</span>
+    </div>
+    <div class="nav-dot" data-slide="1">
+        <span class="nav-dot-title">Искра</span>
+    </div>
+    <div class="nav-dot" data-slide="2">
+        <span class="nav-dot-title">Единство</span>
+    </div>
+</div>
+
+<script>
+    // ========== ГЛОБАЛЬНЫЕ ЧАСТИЦЫ ==========
+    const globalParticles = document.getElementById('globalParticles');
+    for (let i = 0; i < 30; i++) {
+        const p = document.createElement('div');
+        p.classList.add('g-particle');
+        p.style.left = Math.random() * 100 + '%';
+        p.style.bottom = Math.random() * 100 + '%';
+        p.style.width = Math.random() * 2 + 1 + 'px';
+        p.style.height = p.style.width;
+        const hue = Math.random() < 0.5 ? 200 : 35;
+        p.style.background = `hsl(${hue}, 80%, ${55 + Math.random() * 35}%)`;
+        p.style.boxShadow = `0 0 ${3 + Math.random() * 6}px hsl(${hue}, 90%, 60%)`;
+        p.style.animationDelay = Math.random() * 8 + 's';
+        p.style.animationDuration = Math.random() * 5 + 6 + 's';
+        globalParticles.appendChild(p);
+    }
+
+    // ========== ЗВЁЗДЫ ДЛЯ СИЯНИЯ ==========
+    const starsContainer = document.getElementById('stars');
+    for (let i = 0; i < 100; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.width = Math.random() * 2 + 1 + 'px';
+        star.style.height = star.style.width;
+        star.style.animationDelay = Math.random() * 5 + 's';
+        star.style.animationDuration = Math.random() * 4 + 2 + 's';
+        starsContainer.appendChild(star);
+    }
+
+    // ========== ЭМБЕРЫ ДЛЯ ИСКРЫ ==========
+    const embersContainer = document.getElementById('embersContainer');
+    for (let i = 0; i < 40; i++) {
+        const ember = document.createElement('div');
+        ember.classList.add('ember');
+        ember.style.left = Math.random() * 100 + '%';
+        ember.style.bottom = Math.random() * 100 + '%';
+        ember.style.width = Math.random() * 3 + 1 + 'px';
+        ember.style.height = ember.style.width;
+        ember.style.animationDelay = Math.random() * 6 + 's';
+        ember.style.animationDuration = Math.random() * 4 + 5 + 's';
+        embersContainer.appendChild(ember);
+    }
+
+    // ========== НАВИГАЦИЯ ПО СТРАНИЦАМ ==========
+    const slides = document.querySelectorAll('.slide');
+    const navDots = document.querySelectorAll('.nav-dot');
+    let currentSlide = 0;
+
+    function goToSlide(index) {
+        slides.forEach(s => s.classList.remove('active'));
+        navDots.forEach(d => d.classList.remove('active'));
+        slides[index].classList.add('active');
+        navDots[index].classList.add('active');
+        currentSlide = index;
+    }
+
+    navDots.forEach(dot => {
+        dot.addEventListener('click', () => {
+            const index = parseInt(dot.getAttribute('data-slide'));
+            goToSlide(index);
+        });
+    });
+
+    // Свайпы на мобилках
+    let touchStartY = 0;
+    document.addEventListener('touchstart', (e) => {
+        touchStartY = e.touches[0].clientY;
+    });
+
+    document.addEventListener('touchend', (e) => {
+        const diff = touchStartY - e.changedTouches[0].clientY;
+        if (Math.abs(diff) > 50) {
+            if (diff > 0 && currentSlide < slides.length - 1) {
+                goToSlide(currentSlide + 1);
+            } else if (diff < 0 && currentSlide > 0) {
+                goToSlide(currentSlide - 1);
+            }
+        }
+    });
+
+    // Колёсико мыши
+    let wheelTimeout;
+    document.addEventListener('wheel', (e) => {
+        clearTimeout(wheelTimeout);
+        wheelTimeout = setTimeout(() => {
+            if (e.deltaY > 30 && currentSlide < slides.length - 1) {
+                goToSlide(currentSlide + 1);
+            } else if (e.deltaY < -30 && currentSlide > 0) {
+                goToSlide(currentSlide - 1);
+            }
+        }, 50);
+    }, { passive: true });
+
+    // Клавиши стрелок
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+            if (currentSlide < slides.length - 1) goToSlide(currentSlide + 1);
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+            if (currentSlide > 0) goToSlide(currentSlide - 1);
+        }
+    });
+
+    // ========== ВКЛАДКИ НА СТРАНИЦЕ СИЯНИЯ ==========
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const targetTab = btn.getAttribute('data-tab');
+            tabButtons.forEach(b => b.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(targetTab).classList.add('active');
+        });
+    });
+
+    // ========== КОПИРОВАНИЕ ПОЧТЫ ==========
+    const emailBox = document.getElementById('emailBox');
+    emailBox.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const email = 'Jdhharisson@gmail.com';
+        navigator.clipboard.writeText(email).then(() => {
+            const originalText = emailBox.innerHTML;
+            emailBox.innerHTML = '✅ Скопировано!';
+            setTimeout(() => { emailBox.innerHTML = originalText; }, 1500);
+        }).catch(() => {
+            alert('Почта: Jdhharisson@gmail.com');
+        });
+    });
+
+    // ========== ПУЛЬСАЦИЯ ТРЕУГОЛЬНИКОВ ==========
+    const triangles = document.querySelectorAll('.triangle');
+    setInterval(() => {
+        triangles.forEach(t => {
+            const intensity = 5 + Math.random() * 6;
+            t.style.filter = `drop-shadow(0 0 ${intensity}px cyan) drop-shadow(0 0 ${intensity/2}px #0088ff)`;
+        });
+        setTimeout(() => {
+            triangles.forEach(t => {
+                t.style.filter = `drop-shadow(0 0 6px #00d4ff) drop-shadow(0 0 12px #00aaff)`;
+            });
+        }, 150);
+    }, 1800);
+</script>
+</body>
+</html>
