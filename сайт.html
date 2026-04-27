@@ -3,7 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="Сияние & Искра — творческое объединение DS/K">
+    <meta name="theme-color" content="#000000">
+    <meta property="og:title" content="Сияние & Искра | DS/K">
+    <meta property="og:description" content="Вместе, даже если мы разные, мы едины">
+    <meta property="og:type" content="website">
     <title>Сияние & Искра | DS/K</title>
+    
+    <!-- GitHub Pages favicon fix -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>">
+    
     <style>
         * {
             margin: 0;
@@ -724,6 +733,7 @@
             color: rgba(0, 200, 255, 0.5);
             font-size: 12px;
             transition: all 0.3s;
+            cursor: pointer;
         }
 
         .placeholder-icon:hover {
@@ -923,15 +933,6 @@
             position: relative;
         }
 
-        .nav-dot::after {
-            content: '';
-            position: absolute;
-            inset: -6px;
-            border-radius: 50%;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-
         .nav-dot:hover {
             border-color: #ffffff;
             box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
@@ -944,7 +945,6 @@
             background: rgba(255, 255, 255, 0.3);
         }
 
-        /* Подсказка при наведении */
         .nav-dot-title {
             position: absolute;
             right: 30px;
@@ -1177,13 +1177,22 @@
     const slides = document.querySelectorAll('.slide');
     const navDots = document.querySelectorAll('.nav-dot');
     let currentSlide = 0;
+    let isTransitioning = false;
 
     function goToSlide(index) {
+        if (isTransitioning || index === currentSlide) return;
+        if (index < 0 || index >= slides.length) return;
+        
+        isTransitioning = true;
         slides.forEach(s => s.classList.remove('active'));
         navDots.forEach(d => d.classList.remove('active'));
         slides[index].classList.add('active');
         navDots[index].classList.add('active');
         currentSlide = index;
+        
+        setTimeout(() => {
+            isTransitioning = false;
+        }, 800);
     }
 
     navDots.forEach(dot => {
@@ -1274,6 +1283,10 @@
             });
         }, 150);
     }, 1800);
+
+    // ========== ЗАЩИТА ОТ ДВОЙНЫХ ПЕРЕХОДОВ ==========
+    console.log('✨ Сияние & Искра | DS/K');
+    console.log('Вместе, даже если мы разные, мы едины');
 </script>
 </body>
 </html>
